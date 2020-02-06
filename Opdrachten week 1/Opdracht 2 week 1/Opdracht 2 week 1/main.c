@@ -12,7 +12,7 @@ void wait( int ms )
 
 int main( void )
 {
-	DDRD = 0b11111111;			// All pins PORTD are set to output
+	DDRD = 0b11111111; // All pins PORTD are set to output
 	
 	while (1)
 	{

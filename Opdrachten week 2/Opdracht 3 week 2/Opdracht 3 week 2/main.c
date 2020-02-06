@@ -9,7 +9,7 @@
 
 void display(int digit);
 
-const unsigned char numbers[16] = {	
+const unsigned char numbers[15] = {	
 	0b00111111, //0
 	0b00000110, //1
 	0b01011011, //2
@@ -24,8 +24,8 @@ const unsigned char numbers[16] = {
 	0b01111100, //B
 	0b00111001, //C
 	0b01011110, //D
-	0b01111001, //E
-	0b01110001 //F
+	0b01111001 //E
+	//0b01110001 //F
 };
 
 void wait(int ms)
@@ -43,7 +43,8 @@ int main (void)
 	display(digit);
 	
 	while (1)
-	{	
+	{
+		loopNumbers();
 		//Button 1 pressed up
 		if (PINC & 0b00000001)
 		{
@@ -65,14 +66,14 @@ int main (void)
 			digit = 0;
 			display(digit);
 		}
-		PORTD = numbers[digit];
+		//PORTD = numbers[digit];
 	}
 }
 
 void display(int digit){
 	if (digit < 15)
 	{
-		PORTD = numbers[digit + 1];
+		PORTD = numbers[digit];
 	}
 	else
 	{
@@ -82,11 +83,8 @@ void display(int digit){
 
 void loopNumbers()
 {	
-	while (1)
-	{
-		for (int i = 0; i < 16; i++){
-			PORTD = numbers[i];
-			wait(250);
-		}
+	for (int i = 0; i < 17; i++){
+		display(i);
+		wait(500);
 	}
 }

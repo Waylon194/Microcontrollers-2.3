@@ -13,21 +13,21 @@ void wait( int ms )
 int main( void )
 {
 	// set PORTD for output
-	DDRD = 0b11111111;					// PORTD.7 input all other bits output
+	DDRD = 0b11111111; // PORTD.7 = input all other bits output
 	DDRC = 0x00;
 
 	while (1)
 	{
 		if (PINC & 0b00000001)
 		{
-			PORTD = 0x80;				// write 0 to all the bits of PortD
+			PORTD = 0x80; // write 0 to all the bits of PortD
 			wait(100);
 			PORTD = 0x00;
 			wait(100);
 		}
 		else
 		{
-			PORTD = 0x00;				// write 1 to all the bits of PortD
+			PORTD = 0x00; // write 1 to all the bits of PortD
 		}
 		wait(150);
 	}

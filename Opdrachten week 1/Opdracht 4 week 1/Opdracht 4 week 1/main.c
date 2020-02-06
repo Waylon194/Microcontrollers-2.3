@@ -6,14 +6,14 @@ void wait( int ms )
 {
 	for (int i=0; i<ms; i++)
 	{
-		_delay_ms( 1 );		// library function (max 30 ms at 8MHz)
+		_delay_ms( 1 );	// library function (max 30 ms at 8MHz)
 	}
 }
 
 int main( void )
 {
 	// set PORTD for output
-	DDRD = 0b11111111;					// all bits output
+	DDRD = 0b11111111; // all bits output
 	PORTD = 0x01;
 
 	while (1)

@@ -22,7 +22,7 @@ int main( void )
 		{
 
 		}
-		
+
 		PORTD = 0x80;
 		wait(delay);
 		PORTD = 0x00;

@@ -14,7 +14,7 @@ int main( void )
 {
 	//Up and down lights
 	int firstLightArray[] = {0x81, 0xC3, 0xE7, 0xFF};
-	DDRD = 0xFF; //output
+	DDRD = 0xFF;
 
 	while (1)
 	{
