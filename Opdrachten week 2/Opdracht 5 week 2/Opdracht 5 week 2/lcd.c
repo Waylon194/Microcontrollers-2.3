@@ -2,7 +2,8 @@
  * lcd.c
  *
  * Created: 6-2-2020 13:05:48
- *  Author: Waylon
+ * Edited: 16-2-2020
+ *  Authors: Waylon, Jasper
  */ 
 
 #include <avr/io.h>
@@ -109,4 +110,12 @@ void lcd_write_text(char *str, int line, _Bool slowmode){
 			_delay_ms(100);
 		}
 	}
+}
+
+// Moves all chars on display one to the right
+// TODO Test!
+void charToRight()
+{
+	lcd_write_command(0x10);
+	lcd_write_command(0xE0);
 }
