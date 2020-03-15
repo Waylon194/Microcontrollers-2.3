@@ -1,2 +1,8 @@
 # Microcontrollers-2.3
-Opdrachten van het vak microcontrollers
+Opdrachten + eindopdracht van het vak microcontrollers
+Periode 2.3 2020
+
+Made by:
+Jasper Bonefaas
+Waylon Lodder
+Daphne Boelhouwers
