@@ -32,8 +32,12 @@ const int tenthPowerPin = 52;	//Tenth led for power indication
 const int servoPin = 6;			//Pin for front servo
 const int irPin = 0;			//Pin for IR receiver
 const int hornPin = 24;			//Pin for piezo speaker (used as horn)
+//Input variables
+const int irInput = 0;
 //Test
 bool hasRun = false;			//Boolean used to toggle test method
+
+//Note: const has been added, since that was a requirement in the tutorial of uploading to a Arduino (Mega).
 
 //Set all pins as output
 void setup() {
@@ -323,9 +327,9 @@ void horn(int time){
 */
 
 void loop() {
-	
+	irInput = analogRead(irPin);
 	//Implement IR code to handle all the remote input
-	case switch (1)
+	case switch (irInput)
 	{
 	case F:
 		forward(255);
