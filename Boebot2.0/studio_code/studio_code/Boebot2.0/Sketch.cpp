@@ -3,21 +3,21 @@
  *  Microcontrollers assesment 2020
  */
 
+//Includes
 #include <Arduino.h>
 
+//Motors
 const int RLmotor = 6;			//Rear left motor
 const int RRmotor = 7;			//Rear right motor
 const int FRmotor = 8;			//Front right motor
 const int FLmotor = 1;			//Front left motor
+//LED
 const int firstRedLed = 4;		//Brake light
 const int secondRedLed = 5;		//Brake light
 const int firstWhiteLed = 2;	//Headlight
 const int secondWhiteLed = 3;	//Headlight
 const int leftBlinkerLed = 0;	//Left blinker
 const int rightBlinkerLed = 0;	//Right blinker
-const int servoPin = 6;			//Pin for front servo
-const int irPin = 0;			//Pin for IR receiver
-const int hornPin = 24;			//Pin for piezo speaker (used as horn)
 const int fistPowerPin = 34;	//First led for power indication
 const int secondPowerPin = 36;	//Second led for power indication
 const int thirdPowerPin = 38;	//Third led for power indication
@@ -28,8 +28,14 @@ const int seventhPowerPin = 46;	//Seventh led for power indication
 const int eightPowerPin = 48;	//Eight led for power indication
 const int ninthPowerPin = 50;	//Ninth led for power indication
 const int tenthPowerPin = 52;	//Tenth led for power indication
+//Extra
+const int servoPin = 6;			//Pin for front servo
+const int irPin = 0;			//Pin for IR receiver
+const int hornPin = 24;			//Pin for piezo speaker (used as horn)
+//Test
 bool hasRun = false;			//Boolean used to toggle test method
 
+//Set all pins as output
 void setup() {
 	pinMode(RLmotor, OUTPUT);
 	pinMode(RRmotor, OUTPUT);
@@ -56,8 +62,44 @@ void setup() {
 	pinMode(tenthPowerPin, OUTPUT);
 }
 
+/*
+	Movement
+*/
+
+//Go forward at given speed
+void forward(int speed){
+	//Front wheels
+	analogWrite(FLmotor, speed);
+	analogWrite(FRmotor, speed);
+	//Rear wheels
+	analogWrite(RRmotor, speed);
+	analogWrite(RLmotor, speed);
+}
+
+//Go backwards at given speed
+void backwards(int speed){
+	LightBrakeLights()
+	//Front wheels
+	analogWrite(FLmotor, speed);
+	analogWrite(FRmotor, speed);
+	//Rear wheels
+	analogWrite(RRmotor, speed);
+	analogWrite(RLmotor, speed);
+	dimBrakeLights();
+}
+
 void turn45right(){
-		
+	flashRightBlinker();
+	//Move these wheels forward
+	analogWrite(FRmotor, 255);
+	analogWrite(RRmotor, 255);
+	//Move these wheels backwards
+	analogWrite(RLmotor, 0);
+	analogWrite(FLmotor, 0);
+	//TODO: Calculate how long wheels need to run
+	//Wait for x seconds
+	delay(1);
+	turnAllMotorsLow();
 }
 
 void turn90right(){
@@ -71,7 +113,17 @@ void turn180right(){
 }
 
 void turn45left(){
-	
+	flashLeftBlinker();
+	//Move these wheels forward
+	analogWrite(FRmotor, 255);
+	analogWrite(RRmotor, 255);
+	//Move these wheels backwards
+	analogWrite(RLmotor, 1);
+	analogWrite(FLmotor, 1);
+	//TODO: Calculate how long wheels need to run
+	//Wait for x seconds
+	delay(1);
+	turnAllMotorsLow();
 }
 
 void turn90left(){
@@ -84,61 +136,83 @@ void turn180left(){
 	turn90left();
 }
 
-//Flash front leds
-void flashheadlights(){
+/*
+	End movement
+*/
+
+/*
+	Utility
+*/
+
+//Turn both headlights ON
+void lightHeadLights(){
 	digitalWrite(firstWhiteLed, 1);
 	digitalWrite(secondWhiteLed, 1);
-	delay(50);
+}
+
+//Turn both headlights OFF
+void dimHeadLights(){
 	digitalWrite(firstWhiteLed, 0);
 	digitalWrite(secondWhiteLed, 0);
 }
 
-//Flash brake leds
-void flashbrakelights(){
+//Turn both brakelights ON
+void LightBrakeLights(){
 	digitalWrite(firstRedLed, 1);
 	digitalWrite(secondRedLed, 1);
-	delay(50);
+}
+
+//Turn both brakelights OFF
+void dimBrakeLights(){
 	digitalWrite(firstRedLed, 0);
 	digitalWrite(secondRedLed, 0);
+}
+
+//Stop all motors
+void turnAllMotorsLow(){
+	analogWrite(FRmotor, 0);
+	analogWrite(RRmotor, 0);
+	analogWrite(RLmotor, 0);
+	analogWrite(FLmotor, 0);
+}
+
+/*
+	End utility
+*/
+
+/*
+	Visual
+*/
+
+//Flash front leds
+void flashheadlights(){
+	lightHeadLights();
+	delay(50);
+	dimHeadLights();
+}
+
+//Flash brake leds
+void flashbrakelights(){
+	LightBrakeLights();
+	delay(50);
+	dimBrakeLights();
 }
 
 //Flash the left turn signal
 void flashLeftBlinker(){
 	digitalWrite(leftBlinkerLed, 1);
-	digitalWrite(leftBlinkerLed, 1);
 	delay(50);
-	digitalWrite(leftBlinkerLed, 0);
 	digitalWrite(leftBlinkerLed, 0);
 }
 
 //Flash the right turn signal
 void flashRightBlinker(){
 	digitalWrite(rightBlinkerLed, 1);
-	digitalWrite(rightBlinkerLed, 1);
 	delay(50);
 	digitalWrite(rightBlinkerLed, 0);
-	digitalWrite(rightBlinkerLed, 0);
 }
 
-//Go forward at given speed
-void forward(int speed){
-	analogWrite(FLmotor, speed);
-	analogWrite(FRmotor, speed);
-}
-
-//Go backwards at given speed
-void backwards(int speed){
-	analogWrite(RRmotor, speed);
-	analogWrite(RLmotor, speed);
-}
-
-//Honk for give time (in ms)
-void horn(int time){
-	tone(hornPin, 261); //Middle C
-	delay(time);
-	noTone(hornPin); //stop
-}
-
+//Method to show power on the segment display
 void displayPower(int speed){
 	if (speed == 25){
 		digitalWrite(fistPowerPin, 1);
@@ -229,8 +303,43 @@ void displayPower(int speed){
 	}
 }
 
+/*
+	End visual
+*/
+
+/*
+	Audio
+*/
+
+//Honk for give time (in ms)
+void horn(int time){
+	tone(hornPin, 261); //Middle C
+	delay(time);
+	noTone(hornPin); //stop
+}
+
+/*
+	End audio
+*/
+
 void loop() {
+	
 	//Implement IR code to handle all the remote input
+	case switch (1)
+	{
+	case F:
+		forward(255);
+		break;
+	case B:
+		backwards(255);
+		break;
+	case L:
+		turn90left();
+		break;
+	case R:
+		turn90right();
+		break;
+	}
 
 	//Test code, will only run once
 	if (hasRun == false)
@@ -240,9 +349,11 @@ void loop() {
 			displayPower(i);
 			delay(200);
 		}
-
 		displayPower(255);
 		horn(400);
+
+		//Only add code to test above this comment
+		//Keep this flag
 		hasRun = true;
 	}
 }
