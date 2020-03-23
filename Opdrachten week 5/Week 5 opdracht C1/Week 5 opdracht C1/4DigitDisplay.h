@@ -29,3 +29,4 @@ void displayDriverInit();
 void displayOn();
 void displayOff();
 void writeLedDisplay( int data );
+void spi_writeWord ( unsigned char adress, unsigned char data );

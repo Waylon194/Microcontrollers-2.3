@@ -64,12 +64,12 @@ void displayDriverInit()
 
 	spi_slaveSelect(0);				// Select dispaly chip
 	spi_write(0x0A);      			// Register 0A: Intensity
-	spi_write(0x04);    			//  -> Level 4 (in range [1..F])
+	spi_write(0x0F);    			//  -> Level 4 (in range [1..F])	Set from 0x04 to 0x0F
 	spi_slaveDeSelect(0);			// Deselect display chip
 
 	spi_slaveSelect(0);				// Select display chip
 	spi_write(0x0B);  				// Register 0B: Scan-limit
-	spi_write(0x03);   				// 	-> 1 = Display digits 0..3		7-segment adres 0-3
+	spi_write(0x03);   				// 	-> 1 = Display digits 0..3		Set from 0x01 to 0x03
 	spi_slaveDeSelect(0);			// Deselect display chip
 
 	spi_slaveSelect(0);				// Select display chip
@@ -102,21 +102,14 @@ void writeLedDisplay( int data )
 	{
 		for (char i = 1; i <= 4; i++)
 		{
-			spi_slaveSelect(0);         // Select display chip
-			spi_write(i);         		// 	digit adress: (digit place)
-			spi_write(data % 10);  		// 	digit value: i (= digit place)
-			spi_slaveDeSelect(0); 		// Deselect display chip
+			spi_writeWord(i, data % 10);
 			data /= 10;
 		}
-		wait(1000);
 	}
 	else
 	{
 		//Write the '-' to the first digit (adres 4)
-		spi_slaveSelect(0);  
-		spi_write(4);        
-		spi_write(0b1010);
-		spi_slaveDeSelect(0);
+		spi_writeWord(4, 0b1010);
 		
 		//Make the data positive
 		data *= -1;
@@ -124,12 +117,16 @@ void writeLedDisplay( int data )
 		//Write data to digits
 		for (char i = 1; i <= 3; i++)
 		{
-			spi_slaveSelect(0);
-			spi_write(i);      
-			spi_write(data % 10);
-			spi_slaveDeSelect(0);
+			spi_writeWord(i, data % 10);
 			data /= 10;
 		}
-		wait(1000);
 	}
+}
+
+void spi_writeWord ( unsigned char adress, unsigned char data )
+{
+	spi_slaveSelect(0);
+	spi_write(adress);
+	spi_write(data);
+	spi_slaveDeSelect(0);
 }
