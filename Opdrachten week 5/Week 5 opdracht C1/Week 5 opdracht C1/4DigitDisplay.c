@@ -98,13 +98,38 @@ void displayOff()
 
 void writeLedDisplay( int data )
 {
-	for (char i = 1; i <= 4; i++)
+	if (data >=0)
 	{
-		spi_slaveSelect(0);         // Select display chip
-		spi_write(i);         		// 	digit adress: (digit place)
-		spi_write(data % 10);  		// 	digit value: i (= digit place)
-		spi_slaveDeSelect(0); 		// Deselect display chip
-		data /= 10;
+		for (char i = 1; i <= 4; i++)
+		{
+			spi_slaveSelect(0);         // Select display chip
+			spi_write(i);         		// 	digit adress: (digit place)
+			spi_write(data % 10);  		// 	digit value: i (= digit place)
+			spi_slaveDeSelect(0); 		// Deselect display chip
+			data /= 10;
+		}
+		wait(1000);
 	}
-	wait(1000);
+	else
+	{
+		//Write the '-' to the first digit (adres 4)
+		spi_slaveSelect(0);  
+		spi_write(4);        
+		spi_write(0b1010);
+		spi_slaveDeSelect(0);
+		
+		//Make the data positive
+		data *= -1;
+		
+		//Write data to digits
+		for (char i = 1; i <= 3; i++)
+		{
+			spi_slaveSelect(0);
+			spi_write(i);      
+			spi_write(data % 10);
+			spi_slaveDeSelect(0);
+			data /= 10;
+		}
+		wait(1000);
+	}
 }

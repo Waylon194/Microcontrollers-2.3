@@ -52,6 +52,6 @@ int main()
 
 
 	writeLedDisplay(1024);
-
+	writeLedDisplay(-512);
   	return (1);
 }
